@@ -1,6 +1,5 @@
 async function fetchNews() {
-  const url = 'https://api.rss2json.com/v1/api.json?rss_url=https://elpais.com/rss/elpais/inenglish.xml';
-
+  const url = 'https://api.rss2json.com/v1/api.json?rss_url=https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada';
   try {
     const response = await fetch(url);
     const data = await response.json();
