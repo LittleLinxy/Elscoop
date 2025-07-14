@@ -8,8 +8,7 @@ async function fetchNews() {
     articlesDiv.innerHTML = ''; // Clear loading text
 
     data.items.slice(0, 5).forEach(article => {
-      const el = document.createElement('div');
-      el.className = 'article';
+     const el = document.createElement('article');
       el.innerHTML = `
         <h3><a href="${article.link}" target="_blank">${article.title}</a></h3>
         <p>${article.description.slice(0, 150)}...</p>
