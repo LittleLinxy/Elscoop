@@ -44,7 +44,7 @@ document.addEventListener('click', async (e) => {
     articleTextEl.innerText = 'Simplifying...';
 
     try {
-      const response = await fetch('YOUR_REPLIT_URL_HERE/simplify', {
+      const response = await fetch('https://99644689-1a7a-4b0b-bc77-70309a8a8716-00-1t00k35ek17v7.picard.replit.dev/simplify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: articleText, level })
