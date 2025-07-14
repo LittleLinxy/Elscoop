@@ -1,7 +1,7 @@
 async function fetchNews() {
   const url = 'https://api.rss2json.com/v1/api.json?rss_url=https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada';
   try {
-    const response = await fetch(url);
+    const response = await fetch('https://your-url-here/simplify', { … })
     const data = await response.json();
     const articlesDiv = document.getElementById('articles');
 
