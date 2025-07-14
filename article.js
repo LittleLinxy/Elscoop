@@ -24,38 +24,37 @@ if (!article) {
   const originalText = article.text;
 
   document.addEventListener('click', async (e) => {
-    if (e.target.classList.contains('level-btn')) {
-      const level = e.target.dataset.level;
+  if (e.target.classList.contains('level-btn')) {
+    const level = e.target.dataset.level;
 
-      if (simplifications[level]) {
-        articleTextEl.innerText = simplifications[level];
-        return;
-      }
-
-      articleTextEl.innerText = 'Simplifying...';
-
-      try {
-        const response = await fetch(
-          'https://99644689-1a7a-4b0b-bc77-70309a8a8716-00-1t00k35ek17v7.picard.replit.dev/simplify',
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: originalText, level }),
-          }
-        );
-
-        const data = await response.json();
-
-        if (data.simplified) {
-          simplifications[level] = data.simplified;
-          articleTextEl.innerText = data.simplified;
-        } else {
-          articleTextEl.innerText = 'Error: No simplified text returned.';
-        }
-      } catch (err) {
-        console.error(err);
-        articleTextEl.innerText = 'Error simplifying text.';
-      }
+    if (simplifications[level]) {
+      articleTextEl.innerText = simplifications[level];
+      return;
     }
-  });
-}
+
+    articleTextEl.innerText = 'Simplifying...';
+
+    try {
+      const response = await fetch(
+        'https://99644689-1a7a-4b0b-bc77-70309a8a8716-00-1t00k35ek17v7.picard.replit.dev/simplify',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: originalText, level }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.simplified) {
+        simplifications[level] = data.simplified;
+        articleTextEl.innerText = data.simplified;
+      } else {
+        articleTextEl.innerText = 'Error: No simplified text returned.';
+      }
+    } catch (err) {
+      console.error(err);
+      articleTextEl.innerText = 'Error simplifying text.';
+    }
+  }
+});
