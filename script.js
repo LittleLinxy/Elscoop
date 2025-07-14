@@ -2,9 +2,13 @@ async function fetchNews() {
   const url = 'https://api.rss2json.com/v1/api.json?rss_url=https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada';
 
   try {
-    const response = await fetch('https://99644689-1a7a-4b0b-bc77-70309a8a8716-00-1t00k35ek17v7.picard.replit.dev/simplify', {
-    const data = await response.json();
-    const articlesDiv = document.getElementById('articles');
+   const response = await fetch('https://99644689-1a7a-4b0b-bc77-70309a8a8716-00-1t00k35ek17v7.picard.replit.dev/simplify', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ text: articleText, level })
+});
+
+const data = await response.json();
 
     articlesDiv.innerHTML = ''; // Clear loading text
 
