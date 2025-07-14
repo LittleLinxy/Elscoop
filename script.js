@@ -1,4 +1,3 @@
-// Fetch the Spanish news articles
 async function fetchNews() {
   const url =
     'https://api.rss2json.com/v1/api.json?rss_url=https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada';
@@ -10,12 +9,25 @@ async function fetchNews() {
 
     articlesDiv.innerHTML = ''; // Clear loading text
 
-    data.items.slice(0, 5).forEach((article) => {
+    // Save all articles in localStorage
+    const articleData = [];
+
+    data.items.slice(0, 5).forEach((article, index) => {
+      const originalText = article.description.slice(0, 150);
+
+      articleData.push({
+        title: article.title,
+        link: article.link,
+        text: article.description, // full
+      });
+
       const el = document.createElement('article');
+      el.dataset.original = originalText;
+      el.simplifications = {};
 
       el.innerHTML = `
-        <h3><a href="${article.link}" target="_blank">${article.title}</a></h3>
-        <p>${article.description.slice(0, 150)}...</p>
+        <h3><a href="article.html?id=${index}" target="_blank">${article.title}</a></h3>
+        <p>${originalText}...</p>
         <div class="levels">
           <button class="level-btn" data-level="A2">A2</button>
           <button class="level-btn" data-level="B1">B1</button>
@@ -26,24 +38,35 @@ async function fetchNews() {
 
       articlesDiv.appendChild(el);
     });
+
+    localStorage.setItem('articles', JSON.stringify(articleData));
+
   } catch (error) {
     console.error('Error fetching news:', error);
     document.getElementById('articles').innerText = 'Failed to load news.';
   }
 }
 
-// Call the function on page load
 fetchNews();
 
-// Add event listener for simplification buttons
 document.addEventListener('click', async (e) => {
   if (e.target.classList.contains('level-btn')) {
     const level = e.target.dataset.level;
     const articleEl = e.target.closest('article');
     const articleTextEl = articleEl.querySelector('p');
-    const articleText = articleTextEl.innerText;
+
+    if (!articleEl.simplifications) {
+      articleEl.simplifications = {};
+    }
+
+    if (articleEl.simplifications[level]) {
+      articleTextEl.innerText = articleEl.simplifications[level];
+      return;
+    }
 
     articleTextEl.innerText = 'Simplifying...';
+
+    const originalText = articleEl.dataset.original;
 
     try {
       const response = await fetch(
@@ -51,13 +74,14 @@ document.addEventListener('click', async (e) => {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: articleText, level }),
+          body: JSON.stringify({ text: originalText, level }),
         }
       );
 
       const data = await response.json();
 
       if (data.simplified) {
+        articleEl.simplifications[level] = data.simplified;
         articleTextEl.innerText = data.simplified;
       } else {
         articleTextEl.innerText = 'Error: No simplified text returned.';
@@ -68,3 +92,4 @@ document.addEventListener('click', async (e) => {
     }
   }
 });
+
